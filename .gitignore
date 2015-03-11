@@ -6,3 +6,5 @@ tmp/
 Gemfile.lock
 .ftp
 pkg/
+.idea
+.DS_Store

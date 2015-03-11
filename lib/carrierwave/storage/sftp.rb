@@ -39,7 +39,7 @@ module CarrierWave
         def to_file
           temp_file = Tempfile.new(filename)
           temp_file.binmode
-          temp_file.write file.body
+          temp_file.write read
           temp_file
         end
 
@@ -58,11 +58,11 @@ module CarrierWave
         end
 
         def read
-          file.body
+          connection.open(full_path).read
         end
 
         def content_type
-          @content_type || file.content_type
+          @content_type
         end
 
         def content_type=(new_content_type)
@@ -82,19 +82,9 @@ module CarrierWave
           "#{@uploader.sftp_folder}/#{path}"
         end
 
-        def file
-          require 'net/http'
-          url = URI.parse(self.url)
-          req = Net::HTTP::Get.new(url.path)
-          Net::HTTP.start(url.host, url.port) do |http|
-            http.request(req)
-          end
-        end
-
         def connection
-          sftp = Net::SFTP.start(@uploader.sftp_host, @uploader.sftp_user, @uploader.sftp_options)
-          yield sftp
-          sftp.close_channel
+          @sftp ||= Net::SFTP.start(@uploader.sftp_host, @uploader.sftp_user, @uploader.sftp_options)
+          yield @sftp
         end
       end
     end
