@@ -89,8 +89,8 @@ module CarrierWave
         end
 
         def connection
-          @sftp ||= Net::SFTP.start(@uploader.sftp_host, @uploader.sftp_user, @uploader.sftp_options)
-          yield @sftp
+          SFTPConnection.connection(@uploader.sftp_host, @uploader.sftp_user, @uploader.sftp_options)
+          yield SFTPConnection.instance.sftp
         end
       end
     end
