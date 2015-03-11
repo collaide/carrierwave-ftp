@@ -92,6 +92,24 @@ module CarrierWave
           SFTPConnection.connection(@uploader.sftp_host, @uploader.sftp_user, @uploader.sftp_options)
           yield SFTPConnection.instance.sftp
         end
+
+        class SFTPConnection
+          include Singleton
+
+          attr_reader :sftp
+
+          def self.connection(host, user, options)
+            @@host = host
+            @@user = user
+            @@options = options
+          end
+
+          private
+
+          def initialize
+            @sftp ||= Net::SFTP.start(@@host, @@user, @@options)
+          end
+        end
       end
     end
   end
