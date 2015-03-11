@@ -29,8 +29,8 @@ module CarrierWave
         end
 
         def url
+          tempfile =  Tempfile.new('sftp')
           connection do |sftp|
-           tempfile =  Tempfile.new('sftp')
             sftp.download(full_path, tempfile)
           end
           tempfile
