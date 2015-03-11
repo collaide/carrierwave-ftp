@@ -62,7 +62,7 @@ module CarrierWave
         end
 
         def content_type
-          @content_type
+          @content_type || ''
         end
 
         def content_type=(new_content_type)
