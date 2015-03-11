@@ -29,7 +29,11 @@ module CarrierWave
         end
 
         def url
-          "#{@uploader.sftp_url}/#{path}"
+          connection do |sftp|
+           tempfile =  Tempfile.new('sftp')
+            sftp.download(full_path, tempfile)
+          end
+          tempfile
         end
 
         def filename(options = {})
@@ -59,7 +63,7 @@ module CarrierWave
 
         def read
           connection do |sftp|
-            sftp.open(full_path).read
+            sftp.file.open(full_path).read
           end
         end
 
