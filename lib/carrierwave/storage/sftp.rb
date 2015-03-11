@@ -58,7 +58,9 @@ module CarrierWave
         end
 
         def read
-          connection.open(full_path).read
+          connection do |sftp|
+            sftp.open(full_path).read
+          end
         end
 
         def content_type
